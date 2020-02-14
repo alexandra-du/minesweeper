@@ -87,7 +87,7 @@ for i in range(1,m-1):
          
         # if flagged, unflag
         elif button_data[2] == 2:
-            button_data[0].config(text='   ')
+            button_data[0].config(text='    ')
             button_data[2] = 0
            
         
