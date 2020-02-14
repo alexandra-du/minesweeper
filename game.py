@@ -29,7 +29,7 @@ for i in range(1,m-1):
 
             
             
- class Minesweeper:
+class Minesweeper:
 
     def __init__(self, master):
         
@@ -46,7 +46,7 @@ for i in range(1,m-1):
         y_coord = 0
 
         for x in range((n-2)*(m-2)):
-  
+            mine = 0
             message = "    "
             self.buttons[x] = [ Button(frame, text=message), #initial state of button at beginning of game
                                 mine, #contains bomb or not (0/1)
@@ -91,7 +91,7 @@ for i in range(1,m-1):
             button_data[2] = 0
            
         
------------------------------------------------------------------------------------------------------------
+#-----------------------------------------------------------------------------------------------------------
 def main():
     # create Tk widget
     top = Tk()
@@ -101,3 +101,5 @@ def main():
     minesweeper = Minesweeper(top)
     # run event loop
     top.mainloop()
+if __name__ == "__main__":
+    main()
