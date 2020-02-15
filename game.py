@@ -43,7 +43,7 @@ class Minesweeper:
             
         self.buttons = dict({})
         x_coord = 1
-        y_coord = 0
+        y_coord = 1
 
         for x in range((n-2)*(m-2)):
             mine = 0
@@ -54,7 +54,9 @@ class Minesweeper:
                                 x, #ID of cell
                                 [x_coord, y_coord], #coordinates of cell
                                 0 ] #number of adjacent bombs
-        
+            
+            #print(x_coord, y_coord)
+            
             #in the event of a right click:    
             self.buttons[x][0].bind('<Button-3>', self.rclicked_wrapper(x))
             
@@ -68,7 +70,6 @@ class Minesweeper:
                 y_coord = 0
                 x_coord += 1
             y_coord += 1
-            print(x_coord, y_coord)
         
         #create the grid with buttons after each turn
         for key in self.buttons:
