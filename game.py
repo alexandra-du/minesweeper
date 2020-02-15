@@ -40,6 +40,8 @@ class Minesweeper:
         # possible states of a cell: unclicked; clicked; flag placed on it, + others ?
         self.flags = 0
         self.clicked = 0
+        
+        self.mines = np.sum(array)
             
         self.buttons = dict({})
         x_coord = 1
@@ -57,10 +59,14 @@ class Minesweeper:
             
             #print(x_coord, y_coord)
             
+            #assign a mine to the cell or not
+            self.buttons[x][1] = (solutions[x_coord][y_coord]==10)
+            
             #in the event of a right click:    
             self.buttons[x][0].bind('<Button-3>', self.rclicked_wrapper(x))
             
-            #in the event of a left click to be defined
+            #in the event of a left click:
+            self.buttons[x][0].bind('<Button-1>', self.lclicked_wrapper(x))
             
             #nb of adjacent bombs:
             self.buttons[x][5] = solutions[x_coord][y_coord]
@@ -90,11 +96,59 @@ class Minesweeper:
         elif button_data[2] == 2:
             button_data[0].config(text='    ')
             button_data[2] = 0
+        
+    #details in the event of a left click:
+    def lclicked_wrapper(self, x):
+        return lambda Button: self.lclicked(self.buttons[x])
+
+    def lclicked(self, button_data):
+        if button_data[1] == 1: #if a mine
+            # show all mines and check for flags
+            for key in self.buttons:
+                #for all mines that were not flagged
+                if self.buttons[key][1] == 1 and self.buttons[key][2] == 0:
+                    self.buttons[key][0].config(background = 'red')
+                #for all flagged mines
+                if self.buttons[key][1] == 1 and self.buttons[key][2] == 2:
+                    self.buttons[key][0].config(background = 'green')
+                #for all flagged but are not mines
+                if self.buttons[key][1] != 1 and self.buttons[key][2] == 2:
+                    self.buttons[key][0].config(text = ' X ')
+            # end game
+            self.gameover()
+        else:
+            #if the clicked cell has no neighboring mine
+            if button_data[5] == 0:
+                button_data[0].config(background = 'white')
+                #self.clear_empty_tiles(button_data[3])
+            else:
+                button_data[0].config(background = 'white', text = ' ' + str(int(button_data[5])) + ' ')
+            # if not already set as clicked, change state and count
+            if button_data[2] != 1:
+                button_data[2] = 1
+                self.clicked += 1
+            if self.clicked == (m-2)*(n-2) - self.mines:
+                for key in self.buttons:
+                #for all mines that were not flagged
+                    if self.buttons[key][2] == 2:
+                        self.buttons[key][0].config(background = 'green')
+                self.victory()
+                
+    def gameover(self):
+        global top
+        messagebox.showinfo("Info", "Game over")
+        top.destroy()
+        
+    def victory(self):
+        messagebox.showinfo("Info", "You Win!")
+        global top
+        top.destroy() 
            
         
 #-----------------------------------------------------------------------------------------------------------
 def main():
     # create Tk widget
+    global top
     top = Tk()
     # set program title
     top.title("Minesweeper")
