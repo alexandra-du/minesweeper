@@ -43,7 +43,8 @@ class Minesweeper:
         self.clicked = 0
         
         self.mines = np.sum(array)
-            
+        messagebox.showinfo("Info","The number of mines to find is " + str(int(self.mines)) + ", good luck!")
+        
         self.buttons = dict({})
         x_coord = 1
         y_coord = 1
