@@ -104,7 +104,7 @@ class Minesweeper:
         return lambda Button: self.lclicked(self.buttons[x])
 
     def lclicked(self, button_data):
-        if button_data[1] == 1: #if a mine
+        if button_data[1] == 1 and button_data[2]!=2: #if a mine and not flagged
             # show all mines and check for flags
             for key in self.buttons:
                 #for all mines that were not flagged
@@ -118,7 +118,7 @@ class Minesweeper:
                     self.buttons[key][0].config(text = ' X ')
             # end game
             self.gameover()
-        else:
+        elif button_data[1] != 1 and button_data[2]!=2: #if not a mine and not flagged
             #if the clicked cell has no neighboring mine
             if button_data[5] == 0:
                 button_data[0].config(background = 'white')
