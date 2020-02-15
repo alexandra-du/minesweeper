@@ -27,7 +27,8 @@ for i in range(1,m-1):
             #if cell contains a bomb, value will be 10 (arbitrarily)
             solutions[i][j] = 10
 
-            
+print(array[1:m-1,1:n-1])
+print(solutions[1:m-1,1:n-1])            
             
 class Minesweeper:
 
@@ -89,12 +90,12 @@ class Minesweeper:
     def rclicked(self, button_data):
         # if not clicked
         if button_data[2] == 0:                  #if button is unclicked
-            button_data[0].config(text='flag')
+            button_data[0].config(background = 'orange')
             button_data[2] = 2
          
         # if flagged, unflag
         elif button_data[2] == 2:
-            button_data[0].config(text='    ')
+            button_data[0].config(background = 'SystemButtonFace')
             button_data[2] = 0
         
     #details in the event of a left click:
