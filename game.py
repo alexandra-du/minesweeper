@@ -120,7 +120,8 @@ class Minesweeper:
             #if the clicked cell has no neighboring mine
             if button_data[5] == 0:
                 button_data[0].config(background = 'white')
-                #self.clear_empty_tiles(button_data[3])
+                #unveil all neighboring cells and so on (to be continued)
+                
             else:
                 button_data[0].config(background = 'white', text = ' ' + str(int(button_data[5])) + ' ')
             # if not already set as clicked, change state and count
@@ -129,7 +130,7 @@ class Minesweeper:
                 self.clicked += 1
             if self.clicked == (m-2)*(n-2) - self.mines:
                 for key in self.buttons:
-                #for all mines that were not flagged
+                #for all mines that were correctly flagged
                     if self.buttons[key][2] == 2:
                         self.buttons[key][0].config(background = 'green')
                 self.victory()
