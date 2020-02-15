@@ -121,7 +121,9 @@ class Minesweeper:
             #if the clicked cell has no neighboring mine
             if button_data[5] == 0:
                 button_data[0].config(background = 'white')
-                #unveil all neighboring cells and so on (to be continued)
+                
+                #unveil all neighboring cells:
+                self.unveil_neighbors(button_data)
                 
             else:
                 button_data[0].config(background = 'white', text = ' ' + str(int(button_data[5])) + ' ')
@@ -146,7 +148,32 @@ class Minesweeper:
         global top
         top.destroy() 
            
-        
+    #idea of following function: if a cell with no neighboring mine is unveiled: its 8 neighbors are unveiled as well. For each of the
+    #neighbors, if it contains a number, this number is displayed. If it is empty, we unveil its 8 neighbors and so on
+    
+    def unveil_neighbors(self, button_data):
+        liste = [button_data] #liste contains the cells for which we need to unveil its 8 neighbors
+       # for i in range(button_data[4][0]-1, button_data[4][0]+2):
+        #    for i in range(button_data[4][1]-1, button_data[4][1]+2):
+        while len(liste)!=0:
+            print(liste)
+            for element in liste:
+                liste.remove(element)
+                for key in self.buttons:
+                    #we identify the 8 neighboring cells:
+                    if self.buttons[key][4][0] >= element[4][0]-1 and \
+                    self.buttons[key][4][0] <= element[4][0]+1 and \
+                    self.buttons[key][4][1] >= element[4][1]-1 and \
+                    self.buttons[key][4][1] <= element[4][1]+1:
+                        liste.append(self.buttons[key]) 
+                        #liste.remove(element)
+            for y in liste:
+                if y[5] != 0: #if cell contains a number, we display the number and remove it from the list of cells that need to be studied
+                    y[0].config(background = 'white', text = ' ' + str(int(y[5])))
+                    liste.remove(y)
+                else: #if the cell is empty, we disclose it and continue to study its neighbors
+                    y[0].config(background = 'white')
+    
 #-----------------------------------------------------------------------------------------------------------
 def main():
     # create Tk widget
