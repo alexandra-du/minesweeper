@@ -1,6 +1,7 @@
 import random
 import numpy as np
 from tkinter import *
+import copy
 
 # create array of size m*n, for example:
 m=10
@@ -104,7 +105,14 @@ class Minesweeper:
         return lambda Button: self.lclicked(self.buttons[x])
 
     def lclicked(self, button_data):
+        # if not already set as clicked, change state and count
+        if button_data[2] != 1:
+            button_data[2] = 1
+            self.clicked += 1
+            
         if button_data[1] == 1 and button_data[2]!=2: #if a mine and not flagged
+            button_data[0].config(background = 'red')
+            
             # show all mines and check for flags
             for key in self.buttons:
                 #for all mines that were not flagged
@@ -122,21 +130,60 @@ class Minesweeper:
             #if the clicked cell has no neighboring mine
             if button_data[5] == 0:
                 button_data[0].config(background = 'white')
-                #unveil all neighboring cells and so on (to be continued)
+                #unveil all neighboring cells:
+                self.unveil_neighbors(button_data)
+
                 
             else:
                 button_data[0].config(background = 'white', text = ' ' + str(int(button_data[5])) + ' ')
-            # if not already set as clicked, change state and count
-            if button_data[2] != 1:
-                button_data[2] = 1
-                self.clicked += 1
+            
             if self.clicked == (m-2)*(n-2) - self.mines:
                 for key in self.buttons:
                 #for all mines that were correctly flagged
                     if self.buttons[key][2] == 2:
                         self.buttons[key][0].config(background = 'green')
                 self.victory()
+    
+    
+    def unveil_neighbors(self, button_data):
+   
+        liste = [button_data] #liste contains cells that need to be inspected (i.e. that have no neighboring mines)
+        liste2 = [] #liste2 contains the 8 neighbors of the cells from liste
+        while len(liste) != 0: #while there are still cells to be inspected
+            
+            for element in liste:
+                #determine the neighbors of the cell that are unclicked and not yet in liste, and add them to liste2:
+                for key in self.buttons:
+                    if not(self.buttons[key] in liste) and\
+                    self.buttons[key][2] == 0 and\
+                    self.buttons[key][4][0] >= element[4][0]-1 and \
+                    self.buttons[key][4][0] <= element[4][0]+1 and \
+                    self.buttons[key][4][1] >= element[4][1]-1 and \
+                    self.buttons[key][4][1] <= element[4][1]+1:
+                        liste2.append(self.buttons[key])
                 
+                #once a cell has been inspected, it can be removed from liste
+                if element in liste2:
+                    liste2.remove(element)
+                    
+                liste = copy.copy(liste2) #update the list of cells to be inspected with the new-found neighbors
+               
+                for y in liste2:
+                    if y[2] == 0: #for each neighbor that is not yet clicked
+                        y[2] = 1 #mark the neighbor as clicked
+                        if y[5] != 0: #if the neighbor itself has neighboring mines, display the number and remove from list 
+                            y[0].config(background = 'white', text = ' ' + str(int(y[5])) + ' ')
+                            liste.remove(y)
+                            
+                        else: #if the neighbor itself has no neighboring mines, change the background to 'clicked' and keep it
+                            #in liste to be further inspected
+                            y[0].config(background = 'white')
+                            
+                        self.clicked += 1 #update the number of clicked cells
+                
+                liste2 = copy.copy(liste) #update the list of cells to be inspected
+
+    
     def gameover(self):
         global top
         messagebox.showinfo("Info", "Game over")
