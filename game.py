@@ -188,11 +188,13 @@ class Minesweeper:
         global top
         messagebox.showinfo("Info", "Game over")
         top.destroy()
+        main()
         
     def victory(self):
         messagebox.showinfo("Info", "You Win!")
         global top
         top.destroy() 
+        main()
            
         
 #-----------------------------------------------------------------------------------------------------------
